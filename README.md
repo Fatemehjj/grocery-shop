@@ -6,7 +6,7 @@
 
 2: get remaining groceries(shop/remaining/{grocery})
 
-3: get all groceris(shop/get/all)
+3: get all groceries(shop/get/all)
 
 #To Do
 
