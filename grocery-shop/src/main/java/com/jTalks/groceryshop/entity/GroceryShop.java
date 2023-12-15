@@ -5,10 +5,12 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+
 @Entity
 @Data
 @Table(name = "grocery_shop")
-public class GroceryShop {
+public class GroceryShop implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
