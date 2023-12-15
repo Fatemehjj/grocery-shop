@@ -4,11 +4,9 @@
 
 1: buy a grocery(shop/buy/{quantity}/{grocery})
 
-2: get remaining groceries(shop/remaining/{grocery})
+2: get remaining groceries(shop/remaining/{grocery}) -> cachable
 
 3: get all groceries(shop/get/all)
 
-#To Do
-
-for 3rd and 2nd endpoints i'll add redis cache
+4: get info for a particular grocery(shop/info/{grocery}) -> cachable
 
