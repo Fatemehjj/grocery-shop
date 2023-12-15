@@ -20,5 +20,6 @@ public interface ShopRepository extends JpaRepository<GroceryShop, Integer> {
     @Transactional
     @Query(value = "UPDATE grocery_shop q set q.amount_of_groceries=:remainingGroceries where q.grocery LIKE (%:groceryName%)", nativeQuery = true)
     void updateGrocery(String groceryName, int remainingGroceries);
+   Optional <GroceryShop> findByGroceryName(String grocery);
 
 }
