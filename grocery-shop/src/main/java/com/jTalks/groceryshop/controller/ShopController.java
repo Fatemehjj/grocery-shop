@@ -17,12 +17,11 @@ public class ShopController {
     @Autowired
     private ShopService service;
 @GetMapping("remaining/{grocery}")
-    public String getRemainingGrocery(@PathVariable String grocery){
-
+    public GroceriesDto getRemainingGrocery(@PathVariable String grocery){
         return service.findRemainingGrocery(grocery);}
 
     @PutMapping(value = "buy/{number}/{grocery}")
-    public ResponseEntity<String> buyGrocery(@PathVariable int number, @PathVariable String grocery){
+    public GroceriesDto buyGrocery(@PathVariable int number, @PathVariable String grocery){
         return service.buyGrocery(number, grocery);}
 
     @GetMapping(value = "get/all")
@@ -32,7 +31,6 @@ public class ShopController {
 
     @GetMapping("info/{grocery}")
     public GroceriesDto getInfoForGrocery(@PathVariable String grocery){
-
         return service.getInfoForGrocery(grocery);}
 
 }
