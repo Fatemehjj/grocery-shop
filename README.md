@@ -2,7 +2,7 @@
 
 #endpoints:
 
-1: buy a grocery(shop/buy/{quantity}/{grocery})
+1: buy a grocery(shop/buy/{quantity}/{grocery}) -> cachePut
 
 2: get remaining groceries(shop/remaining/{grocery}) -> cachable
 
