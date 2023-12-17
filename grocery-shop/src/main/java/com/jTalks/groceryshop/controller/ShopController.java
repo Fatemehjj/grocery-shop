@@ -16,7 +16,7 @@ import java.util.List;
 public class ShopController {
     @Autowired
     private ShopService service;
-@GetMapping("remaining/{grocery}")
+    @GetMapping("remaining/{grocery}")
     public GroceriesDto getRemainingGrocery(@PathVariable String grocery){
         return service.findRemainingGrocery(grocery);}
 
@@ -28,10 +28,6 @@ public class ShopController {
     public ResponseEntity<List<GroceriesDto>> getAll(){
     return service.findAll();
     }
-
-    @GetMapping("info/{grocery}")
-    public GroceriesDto getInfoForGrocery(@PathVariable String grocery){
-        return service.getInfoForGrocery(grocery);}
 
 }
 
