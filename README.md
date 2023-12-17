@@ -7,6 +7,3 @@
 2: get remaining groceries(shop/remaining/{grocery}) -> cachable
 
 3: get all groceries(shop/get/all)
-
-4: get info for a particular grocery(shop/info/{grocery}) -> cachable
-
