@@ -3,6 +3,7 @@ package com.jTalks.groceryshop.service;
 import com.jTalks.groceryshop.dto.GroceriesDto;
 import com.jTalks.groceryshop.entity.GroceryShop;
 import com.jTalks.groceryshop.repository.ShopRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +20,7 @@ public class ShopService {
     private static final String REDIS_CACHE_VALUE = "orders";
     @Autowired
     private ShopRepository repository;
+
     @Cacheable(value = REDIS_CACHE_VALUE, key = "#grocery")
     public GroceriesDto findRemainingGrocery(String grocery){
         System.out.println("getting remaining grocery from database");
@@ -28,7 +30,7 @@ public class ShopService {
             int remaining = repository.findRemainingGroceries(grocery);
             findGrocery.setGrocery(groceryName);
             findGrocery.setQuantity(remaining);
-            findGrocery.setPrice(getInfoForGrocery(groceryName).getQuantity());
+            findGrocery.setPrice(buyGrocery(0, grocery).getPrice());
             return findGrocery;
         }
         if (grocery.equals("null")) {
@@ -39,7 +41,6 @@ public class ShopService {
     }
     @CachePut(value = REDIS_CACHE_VALUE, key = "#grocery")
     public GroceriesDto buyGrocery(int numberOfGrocery, String grocery) {
-        System.out.println("getting data from db");
         String findGroceryName = repository.groceryName(grocery);
         if (findGroceryName != null) {
             int remaining = repository.findRemainingGroceries(grocery);
@@ -48,9 +49,9 @@ public class ShopService {
                 GroceriesDto groceriesInfo = new GroceriesDto();
                 repository.updateGrocery(grocery, groceryStore);
                 Optional<GroceryShop> groceryObj = repository.findByGroceryName(findGroceryName);
-                groceriesInfo.setGrocery(groceryObj.get().getGroceryName());
-                groceriesInfo.setQuantity(groceryObj.get().getNumberOfGroceries());
-                groceriesInfo.setPrice(groceryObj.get().getPrice());
+                groceriesInfo.setGrocery(groceryObj.orElse(new GroceryShop()).getGroceryName());
+                groceriesInfo.setQuantity(groceryObj.orElse(new GroceryShop()).getNumberOfGroceries());
+                groceriesInfo.setPrice(groceryObj.orElse(new GroceryShop()).getPrice());
 
                return groceriesInfo;
             }
@@ -58,7 +59,7 @@ public class ShopService {
        return  new GroceriesDto("not found", 0, 0);
     }
 
-
+    @Transactional(readOnly = true)
     public ResponseEntity<List<GroceriesDto>> findAll() {
         List<GroceryShop> allGroceries = repository.findAll();
         List<GroceriesDto> groceries = new ArrayList<>();
@@ -71,16 +72,5 @@ public class ShopService {
             groceries.add(shop);
         }
         return new ResponseEntity<>(groceries, HttpStatus.OK);
-    }
-@Cacheable(value = REDIS_CACHE_VALUE, key = "#grocery")
-    public GroceriesDto getInfoForGrocery(String grocery) {
-    System.out.println("getting info from db");
-        Optional<GroceryShop> findGrocery = repository.findByGroceryName(grocery);
-        GroceriesDto wrapper = new GroceriesDto();
-        wrapper.setGrocery(findGrocery.get().getGroceryName());
-        wrapper.setPrice(findGrocery.get().getPrice());
-        wrapper.setQuantity(findGrocery.get().getNumberOfGroceries());
-
-        return wrapper;
     }
 }
