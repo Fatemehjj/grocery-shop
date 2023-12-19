@@ -20,7 +20,6 @@ public class ShopService {
     private static final String REDIS_CACHE_VALUE = "orders";
     @Autowired
     private ShopRepository repository;
-
     @Cacheable(value = REDIS_CACHE_VALUE, key = "#grocery")
     public GroceriesDto findRemainingGrocery(String grocery){
         System.out.println("getting remaining grocery from database");

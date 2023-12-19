@@ -1,11 +1,8 @@
 package com.jTalks.groceryshop.controller;
 
 import com.jTalks.groceryshop.dto.GroceriesDto;
-import com.jTalks.groceryshop.entity.GroceryShop;
 import com.jTalks.groceryshop.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +13,7 @@ import java.util.List;
 public class ShopController {
     @Autowired
     private ShopService service;
+
     @GetMapping("remaining/{grocery}")
     public GroceriesDto getRemainingGrocery(@PathVariable String grocery){
         return service.findRemainingGrocery(grocery);}
