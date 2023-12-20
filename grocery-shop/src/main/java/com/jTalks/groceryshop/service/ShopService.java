@@ -84,11 +84,11 @@ public class ShopService {
         param.put("created", "orders list");
         JasperPrint print = JasperFillManager.fillReport(report, param, dataSource);
         if (request.equals("pdf")){
-            JasperExportManager.exportReportToPdfFile(print, "C:\\Users\\gsybe\\Desktop"+"\\groceries.pdf");
+            JasperExportManager.exportReportToPdfFile(print, "C:\\JAVA\\grocery-app"+"\\groceries.pdf");
             return new ResponseEntity<>("generated pdf file successfully",HttpStatus.OK);}
 
         if (request.equals("html")){
-            JasperExportManager.exportReportToHtmlFile(print, "C:\\Users\\gsybe\\Desktop"+"\\groceries.html");
+            JasperExportManager.exportReportToHtmlFile(print, "C:\\JAVA\\grocery-app"+"\\groceries.html");
             return new ResponseEntity<>("generated html file successfully",HttpStatus.OK);}
         return new ResponseEntity<>("Enter pdf for pdf file or html for html file !",HttpStatus.BAD_REQUEST);
     }
