@@ -2,10 +2,12 @@ package com.jTalks.groceryshop.controller;
 
 import com.jTalks.groceryshop.dto.GroceriesDto;
 import com.jTalks.groceryshop.service.ShopService;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -26,6 +28,9 @@ public class ShopController {
     public ResponseEntity<List<GroceriesDto>> getAll(){
     return service.findAll();
     }
-
+    @GetMapping(value = "/get/{request}")
+    public ResponseEntity<String> getPdfOfOrders(@PathVariable String request) throws JRException, FileNotFoundException {
+        return service.getPdfOfOrders(request);
+    }
 }
 
