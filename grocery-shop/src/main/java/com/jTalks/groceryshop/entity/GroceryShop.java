@@ -13,15 +13,10 @@ import java.io.Serializable;
 public class GroceryShop implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "grocery")
-    private String groceryName;
-
+    private int id;
+    private String grocery;
     @NotNull
-    private int price;
-
-    @Column(name = "amount_of_groceries")
-    private int numberOfGroceries;
+    private double price;
+    private int quantity;
 
 }
