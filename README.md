@@ -7,3 +7,5 @@
 2: get remaining groceries(shop/remaining/{grocery}) -> cachable
 
 3: get all groceries(shop/get/all)
+
+4: get html or pdf file for remaining groceries
