@@ -1,4 +1,4 @@
-# simple spring boot web app with MySQL and Redis(as a cache)
+# simple spring boot web app with *MySQL* and *Redis*(as a *cache*)
 
 #endpoints:
 
@@ -8,4 +8,4 @@
 
 3: get all groceries(shop/get/all)
 
-4: get html or pdf file for remaining groceries
+4: get html or pdf file for remaining groceries (using *jasperreports*)
