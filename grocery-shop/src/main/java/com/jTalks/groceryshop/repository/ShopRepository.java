@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @Repository
 public interface ShopRepository extends JpaRepository<GroceryShop, Integer> {
-    @Query(value = "SELECT q.amount_of_groceries FROM grocery_shop q WHERE q.grocery LIKE (%:grocery%)", nativeQuery = true )
+    @Query(value = "SELECT q.quantity FROM grocery_shop q WHERE q.grocery LIKE (%:grocery%)", nativeQuery = true )
     int findRemainingGroceries(String grocery);
     @Query(value = "SELECT q.grocery FROM grocery_shop q WHERE q.grocery LIKE (%:name%)", nativeQuery = true )
     String groceryName(String name);
     @Modifying
     @Transactional
-    @Query(value = "UPDATE grocery_shop q set q.amount_of_groceries=:remainingGroceries where q.grocery LIKE (%:groceryName%)", nativeQuery = true)
+    @Query(value = "UPDATE grocery_shop q set q.quantity=:remainingGroceries where q.grocery LIKE (%:groceryName%)", nativeQuery = true)
     void updateGrocery(String groceryName, int remainingGroceries);
-   Optional <GroceryShop> findByGroceryName(String grocery);
+   Optional <GroceryShop> findByGrocery(String grocery);
 
 }
