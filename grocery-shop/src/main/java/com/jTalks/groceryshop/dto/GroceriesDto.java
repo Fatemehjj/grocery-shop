@@ -12,5 +12,5 @@ import java.io.Serializable;
 public class GroceriesDto implements Serializable {
     String grocery;
     int quantity;
-    int price;
+    double price;
 }
