@@ -3,6 +3,8 @@ package com.jTalks.groceryshop.service;
 import com.jTalks.groceryshop.dto.GroceriesDto;
 import com.jTalks.groceryshop.entity.GroceryShop;
 import com.jTalks.groceryshop.repository.ShopRepository;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -10,10 +12,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 @Service
 public class ShopService {
@@ -47,9 +50,9 @@ public class ShopService {
             if (groceryStore >= 0) {
                 GroceriesDto groceriesInfo = new GroceriesDto();
                 repository.updateGrocery(grocery, groceryStore);
-                Optional<GroceryShop> groceryObj = repository.findByGroceryName(findGroceryName);
-                groceriesInfo.setGrocery(groceryObj.orElse(new GroceryShop()).getGroceryName());
-                groceriesInfo.setQuantity(groceryObj.orElse(new GroceryShop()).getNumberOfGroceries());
+                Optional<GroceryShop> groceryObj = repository.findByGrocery(findGroceryName);
+                groceriesInfo.setGrocery(groceryObj.orElse(new GroceryShop()).getGrocery());
+                groceriesInfo.setQuantity(groceryObj.orElse(new GroceryShop()).getQuantity());
                 groceriesInfo.setPrice(groceryObj.orElse(new GroceryShop()).getPrice());
 
                return groceriesInfo;
@@ -64,12 +67,29 @@ public class ShopService {
         List<GroceriesDto> groceries = new ArrayList<>();
         for (GroceryShop groceryShop : allGroceries){
             GroceriesDto shop = new GroceriesDto();
-            shop.setGrocery(groceryShop.getGroceryName());
+            shop.setGrocery(groceryShop.getGrocery());
             shop.setPrice(groceryShop.getPrice());
-            shop.setQuantity(groceryShop.getNumberOfGroceries());
+            shop.setQuantity(groceryShop.getQuantity());
 
             groceries.add(shop);
         }
         return new ResponseEntity<>(groceries, HttpStatus.OK);
+    }
+    public ResponseEntity<String> generateFile(String request) throws FileNotFoundException, JRException {
+        List<GroceryShop> allOrders = repository.findAll();
+        File file = ResourceUtils.getFile("classpath:groceries.jrxml");
+        JasperReport report = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(allOrders);
+        Map<String, Object> param = new HashMap<>();
+        param.put("created", "orders list");
+        JasperPrint print = JasperFillManager.fillReport(report, param, dataSource);
+        if (request.equals("pdf")){
+            JasperExportManager.exportReportToPdfFile(print, "C:\\Users\\gsybe\\Desktop"+"\\groceries.pdf");
+            return new ResponseEntity<>("generated pdf file successfully",HttpStatus.OK);}
+
+        if (request.equals("html")){
+            JasperExportManager.exportReportToHtmlFile(print, "C:\\Users\\gsybe\\Desktop"+"\\groceries.html");
+            return new ResponseEntity<>("generated html file successfully",HttpStatus.OK);}
+        return new ResponseEntity<>("Enter pdf for pdf file or html for html file !",HttpStatus.BAD_REQUEST);
     }
 }
