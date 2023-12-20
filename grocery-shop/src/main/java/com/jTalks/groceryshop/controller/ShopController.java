@@ -29,8 +29,8 @@ public class ShopController {
     return service.findAll();
     }
     @GetMapping(value = "/get/{request}")
-    public ResponseEntity<String> getPdfOfOrders(@PathVariable String request) throws JRException, FileNotFoundException {
-        return service.getPdfOfOrders(request);
+    public ResponseEntity<String> getPdfOrHtmlFile(@PathVariable String request) throws JRException, FileNotFoundException {
+        return service.generateFile(request);
     }
 }
 
