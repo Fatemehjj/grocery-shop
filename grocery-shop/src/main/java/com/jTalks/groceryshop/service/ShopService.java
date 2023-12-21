@@ -3,6 +3,7 @@ package com.jTalks.groceryshop.service;
 import com.jTalks.groceryshop.dto.GroceriesDto;
 import com.jTalks.groceryshop.entity.GroceryShop;
 import com.jTalks.groceryshop.repository.ShopRepository;
+import lombok.SneakyThrows;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,21 +76,26 @@ public class ShopService {
         }
         return new ResponseEntity<>(groceries, HttpStatus.OK);
     }
-    public ResponseEntity<String> generateFile(String request) throws FileNotFoundException, JRException {
+    public ResponseEntity<String> generatePdf() throws FileNotFoundException, JRException {
+        JasperPrint print = jasperExportManager();
+            JasperExportManager.exportReportToPdfFile(print, "C:\\JAVA\\grocery-app\\grocery-shop" + "\\groceries.pdf");
+            return new ResponseEntity<>("generated pdf file successfully", HttpStatus.OK);}
+    @SneakyThrows
+    public ResponseEntity<String> generateHtml() {
+        JasperPrint print = jasperExportManager();
+
+        JasperExportManager.exportReportToHtmlFile(print, "C:\\JAVA\\grocery-app\\grocery-shop"+"\\groceries.html");
+        return new ResponseEntity<>("generated html file successfully",HttpStatus.OK);
+    }
+
+    @SneakyThrows
+    private JasperPrint jasperExportManager () {
         List<GroceryShop> allOrders = repository.findAll();
         File file = ResourceUtils.getFile("classpath:groceries.jrxml");
         JasperReport report = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(allOrders);
         Map<String, Object> param = new HashMap<>();
         param.put("created", "orders list");
-        JasperPrint print = JasperFillManager.fillReport(report, param, dataSource);
-        if (request.equals("pdf")){
-            JasperExportManager.exportReportToPdfFile(print, "C:\\JAVA\\grocery-app"+"\\groceries.pdf");
-            return new ResponseEntity<>("generated pdf file successfully",HttpStatus.OK);}
-
-        if (request.equals("html")){
-            JasperExportManager.exportReportToHtmlFile(print, "C:\\JAVA\\grocery-app"+"\\groceries.html");
-            return new ResponseEntity<>("generated html file successfully",HttpStatus.OK);}
-        return new ResponseEntity<>("Enter pdf for pdf file or html for html file !",HttpStatus.BAD_REQUEST);
+        return JasperFillManager.fillReport(report, param, dataSource);
     }
-}
+    }
